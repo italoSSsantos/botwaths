@@ -13,6 +13,9 @@ export function AppSidebar() {
 
   return (
     <aside className="w-[70px] bg-card border-r flex flex-col items-center py-4 shrink-0">
+      <div className="mb-4">
+        <img src="/universal.ico" alt="Logo" className="w-9 h-9 rounded-lg object-contain" />
+      </div>
       <nav className="flex flex-col gap-2 flex-1">
         {navItems.map((item) => {
           const active = activePage === item.id;
@@ -50,6 +53,9 @@ export function AppSidebar() {
           {connectionStatus === "connected" ? "Conectado" : "Desconectado"}
         </span>
       </div>
+      <span className="text-[8px] text-muted-foreground/50 mt-3 text-center leading-tight">
+        criado por<br />Ítalo
+      </span>
     </aside>
   );
 }
