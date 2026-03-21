@@ -1,6 +1,7 @@
 import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg
 import qrcode from 'qrcode'
+import puppeteer from 'puppeteer'
 
 // Estado global da conexão
 export const state = {
@@ -21,16 +22,11 @@ export function initWhatsApp() {
   if (state.client) return
 
   const client = new Client({
-    authStrategy: new LocalAuth({ dataPath: '.wwebjs_auth' }),
+    authStrategy: new LocalAuth({ dataPath: process.env.WA_AUTH_PATH || '.wwebjs_auth' }),
     puppeteer: {
       headless: true,
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-      ],
+      executablePath: puppeteer.executablePath(),
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     },
   })
 

@@ -14,7 +14,7 @@ export function AppSidebar() {
   return (
     <aside className="w-[70px] bg-card border-r flex flex-col items-center py-4 shrink-0">
       <div className="mb-4">
-        <img src="/universal.ico" alt="Logo" className="w-9 h-9 rounded-lg object-contain" />
+        <img src="./universal.ico" alt="Logo" className="w-9 h-9 rounded-lg object-contain" />
       </div>
       <nav className="flex flex-col gap-2 flex-1">
         {navItems.map((item) => {

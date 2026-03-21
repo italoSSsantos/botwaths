@@ -1,0 +1,42 @@
+{
+  "name": "wa-sender",
+  "version": "1.0.0",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "build:app": "cd app && npm run build",
+    "electron:dev": "electron .",
+    "build": "npm run build:app && electron-packager . \"WA Sender\" --platform=win32 --arch=x64 --out=dist-electron --icon=universal.ico --overwrite --ignore=\"^/app/src\" --ignore=\"^/app/node_modules\" --ignore=\"^/node_modules/electron-builder\" --ignore=\"^/node_modules/electron-packager\" --ignore=\"^/dist-electron\" --ignore=\"^\\.git\" --ignore=\"\\.wwebjs_auth\" --ignore=\"\\.wwebjs_cache\""
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.italo.wasender",
+    "productName": "WA Sender",
+    "icon": "universal.ico",
+    "asar": false,
+    "win": {
+      "target": "dir",
+      "icon": "universal.ico",
+      "signingHashAlgorithms": null,
+      "sign": null
+    },
+    "files": [
+      "electron/**/*",
+      "app/dist/**/*",
+      "backend/src/**/*",
+      "backend/package.json",
+      "backend/node_modules/**/*",
+      "universal.ico",
+      "!**/node_modules/.cache/**/*",
+      "!**/.wwebjs_auth/**/*",
+      "!**/.wwebjs_cache/**/*"
+    ],
+    "directories": {
+      "output": "dist-electron",
+      "app": "."
+    }
+  }
+}

@@ -18,3 +18,5 @@ backend/.env
 # OS
 .DS_Store
 Thumbs.db
+.claude/
+dist-electron/

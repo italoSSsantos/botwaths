@@ -115,8 +115,8 @@ export function RecipientsPanel() {
           color: getColor(g.name),
         }))
       );
-    } catch (_) {
-      // silently fail
+    } catch (err) {
+      toast.error('Erro ao carregar contatos: ' + (err instanceof Error ? err.message : String(err)))
     } finally {
       setLoading(false);
     }
