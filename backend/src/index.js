@@ -26,5 +26,4 @@ app.use('/api', contactsRoutes)
 
 app.listen(PORT, () => {
   console.log(`[Server] Rodando em http://localhost:${PORT}`)
-  initWhatsApp()
 })
