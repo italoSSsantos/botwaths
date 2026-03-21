@@ -10,7 +10,7 @@ router.get('/contacts', async (_req, res) => {
   try {
     const contacts = await state.client.getContacts()
     const result = contacts
-      .filter(c => c.id._serialized.endsWith('@c.us') && (c.name || c.pushname || c.number))
+      .filter(c => c.id._serialized.endsWith('@c.us') && c.isMyContact && (c.name || c.pushname || c.number))
       .map(c => ({
         id: c.id._serialized,
         name: c.name || c.pushname || c.number,
