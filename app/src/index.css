@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 97%;
+    --foreground: 210 11% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 11% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 11% 15%;
+
+    --primary: 162 100% 33%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 14% 95%;
+    --secondary-foreground: 210 11% 25%;
+
+    --muted: 210 14% 95%;
+    --muted-foreground: 210 8% 55%;
+
+    --accent: 162 60% 95%;
+    --accent-foreground: 162 100% 25%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 14% 90%;
+    --input: 210 14% 90%;
+    --ring: 162 100% 33%;
+
+    --radius: 0.625rem;
+
+    --sidebar-bg: 0 0% 100%;
+    --sidebar-fg: 210 8% 55%;
+    --sidebar-active: 162 100% 33%;
+    --sidebar-active-fg: 0 0% 100%;
+
+    --badge-danger: 0 72% 51%;
+    --badge-danger-fg: 0 0% 100%;
+
+    --surface-elevated: 0 0% 100%;
+
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
