@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { Search, RefreshCw, Check, X, Users } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Search, RefreshCw, Check, X, Users, Upload } from "lucide-react";
 import { useAppStore } from "@/stores/appStore";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
+import { toast } from "sonner";
+import type { Recipient } from "@/types/whatsapp";
 
 function getInitials(name: string): string {
   return name.split(" ").slice(0, 2).map((w) => w[0] || "").join("").toUpperCase() || "?";
@@ -21,6 +23,36 @@ function getColor(name: string): string {
   return COLOR_PALETTE[name.charCodeAt(0) % COLOR_PALETTE.length];
 }
 
+function parseCSV(text: string): Recipient[] {
+  const lines = text.trim().split(/\r?\n/).filter(Boolean);
+  if (lines.length < 2) return [];
+
+  const headers = lines[0].split(/[,;]/).map((h) => h.trim().toLowerCase().replace(/['"]/g, ""));
+  const nameIdx = headers.findIndex((h) => ["name", "nome", "contato"].includes(h));
+  const phoneIdx = headers.findIndex((h) => ["phone", "telefone", "numero", "number", "fone", "celular", "whatsapp"].includes(h));
+
+  if (phoneIdx === -1) return [];
+
+  const recipients: Recipient[] = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(/[,;]/).map((c) => c.trim().replace(/['"]/g, ""));
+    const rawPhone = cols[phoneIdx] ?? "";
+    const phone = rawPhone.replace(/\D/g, "");
+    if (!phone) continue;
+    const name = nameIdx !== -1 ? (cols[nameIdx] ?? phone) : phone;
+    const id = `${phone}@c.us`;
+    recipients.push({
+      type: "contact",
+      id,
+      name,
+      phone,
+      initials: getInitials(name),
+      color: getColor(name),
+    });
+  }
+  return recipients;
+}
+
 export function RecipientsPanel() {
   const {
     contacts,
@@ -37,6 +69,25 @@ export function RecipientsPanel() {
   const [tab, setTab] = useState<"contacts" | "groups">("contacts");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const csvInputRef = useRef<HTMLInputElement>(null);
+
+  const handleCSVImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result as string;
+      const imported = parseCSV(text);
+      if (!imported.length) {
+        toast.error("Nenhum contato encontrado. Verifique as colunas do CSV (nome, telefone).");
+        return;
+      }
+      imported.forEach((r) => toggleRecipient(r));
+      toast.success(`${imported.length} contatos importados do CSV`);
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
 
   const loadData = useCallback(async () => {
     if (connectionStatus !== "connected") return;
@@ -96,13 +147,23 @@ export function RecipientsPanel() {
               {selectedCount}
             </span>
           </div>
-          <button
-            onClick={loadData}
-            disabled={loading}
-            className="p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground"
-          >
-            <RefreshCw size={14} className={cn(loading && "animate-spin")} />
-          </button>
+          <div className="flex items-center gap-1">
+            <input ref={csvInputRef} type="file" accept=".csv" className="hidden" onChange={handleCSVImport} />
+            <button
+              onClick={() => csvInputRef.current?.click()}
+              title="Importar CSV"
+              className="p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground"
+            >
+              <Upload size={14} />
+            </button>
+            <button
+              onClick={loadData}
+              disabled={loading}
+              className="p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground"
+            >
+              <RefreshCw size={14} className={cn(loading && "animate-spin")} />
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}
