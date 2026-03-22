@@ -2,6 +2,7 @@ import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg
 import qrcode from 'qrcode'
 import puppeteer from 'puppeteer'
+import { logEvent } from './logger.js'
 
 // Estado global da conexão
 export const state = {
@@ -57,6 +58,7 @@ export function initWhatsApp() {
     state.status = 'ready'
     state.qrDataUrl = null
     broadcast('status', { status: 'ready' })
+    logEvent('whatsapp_connected')
     console.log('[WA] Pronto!')
   })
 
@@ -71,6 +73,7 @@ export function initWhatsApp() {
     state.status = 'disconnected'
     state.client = null
     broadcast('status', { status: 'disconnected' })
+    logEvent('whatsapp_disconnected', { reason })
     console.log('[WA] Desconectado:', reason)
   })
 

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { state, broadcast } from '../whatsapp.js'
+import { logEvent } from '../logger.js'
 import pkg from 'whatsapp-web.js'
 const { MessageMedia } = pkg
 
@@ -70,6 +71,7 @@ router.post('/campaign', async (req, res) => {
   })
 
   res.json({ ok: true, total: recipients.length })
+  logEvent('campaign_started', { total: recipients.length, hasMedia: !!mediaBase64 })
 
   ;(async () => {
     let success = 0
@@ -119,6 +121,7 @@ router.post('/campaign', async (req, res) => {
       status: cancelled ? 'cancelled' : 'completed',
     })
 
+    logEvent(cancelled ? 'campaign_cancelled' : 'campaign_completed', { total: recipients.length, success, fail })
     running.delete(id)
   })()
 })

@@ -4,6 +4,7 @@ import { initWhatsApp } from './whatsapp.js'
 import connectionRoutes from './routes/connection.js'
 import messagesRoutes from './routes/messages.js'
 import contactsRoutes from './routes/contacts.js'
+import { logEvent } from './logger.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -26,4 +27,5 @@ app.use('/api', contactsRoutes)
 
 app.listen(PORT, () => {
   console.log(`[Server] Rodando em http://localhost:${PORT}`)
+  logEvent('app_started')
 })
